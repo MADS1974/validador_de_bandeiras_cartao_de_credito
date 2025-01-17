@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validador de Bandeiras de Cartão</title>
+    <!-- Link to the CSS file -->
+    <link rel="stylesheet" href="\validador_de_bandeiras_cartao_de_credito\css\styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Validador de Bandeiras de Cartão de Crédito</h1>
+        <form id="cardForm">
+            <label for="cardNumber">Número do Cartão:</label>
+            <input type="text" id="cardNumber" placeholder="Digite o número do cartão" required>
+            <button type="submit">Validar</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <!-- JavaScript code for validation -->
+    <script>
+        function validateCreditCard(card) {
+            // Remove all non-digit characters
+            const sanitized = card.replace(/[^0-9]/g, '');
+
+            const bandeiras = [
+                { name: "Visa", regex: /^4\d{12}(\d{3})?$/ },
+                { name: "MasterCard", regex: /^(5[1-5]\d{14}|2(2[2-9]|[3-6]\d|7[01])\d{12})$/ },
+                { name: "American Express", regex: /^3[47]\d{13}$/ },
+                { name: "Discover", regex: /^(6011\d{12}|65\d{14}|64[4-9]\d{13})$/ },
+                { name: "Hipercard", regex: /^6062\d*$/ },
+                { name: "Diners Club", regex: /^3\d{13}$/ },
+                { name: "EnRoute", regex: /^2(014|149)\d*$/ },
+                { name: "JCB", regex: /^35\d{14}$/ },
+                { name: "Voyager", regex: /^86\d{3}\s?\d{4}\s?\d{5}\s?\d{1,3}$/ },
+                { name: "Aura", regex: /^50(69|12)\d{12}$/ }, // Adjusted to be more specific
+                { name: "Elo", regex: /^(4011|4312|4389|45[1-9]\d|50[0-8]\d{2}|6277|6363)\d*$/ } // Adjusted to avoid conflict with Aura
+            ];
+
+            // Validate and identify the bandeira
+            for (let bandeira of bandeiras) {
+                if (bandeira.regex.test(sanitized)) {
+                    return `Bandeira: ${bandeira.name}`;
+                }
+            }
+
+            return "Bandeira desconhecida ou número inválido.";
+        }
+
+        document.getElementById('cardForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const cardNumber = document.getElementById('cardNumber').value;
+            const result = validateCreditCard(cardNumber);
+            document.getElementById('result').innerText = result;
+        });
+    </script>
+</body>
+</html>
